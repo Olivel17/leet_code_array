@@ -1,0 +1,48 @@
+import matplotlib.pyplot as plt
+
+
+def visualize_two_sum(nums, target):
+    num_to_index = {}
+    steps = []
+
+    for i, num in enumerate(nums):
+        complement = target - num
+        if complement in num_to_index:
+            steps.append((i, num, complement, True))
+            break
+        steps.append((i, num, complement, False))
+        num_to_index[num] = i
+
+    return steps
+
+
+def plot_steps(nums, target):
+    steps = visualize_two_sum(nums, target)
+
+    fig, ax = plt.subplots()
+
+    # Создаем график массива чисел
+    x = list(range(len(nums)))
+    y = nums
+    ax.scatter(x, y, label='Numbers')
+
+    for step in steps:
+        i, num, complement, found = step
+        if found:
+            ax.annotate(f'Found: {num} + {complement} = {target}', (i, num),
+                        textcoords="offset points", xytext=(0, 10), ha='center', color='green')
+        else:
+            ax.annotate(f'{num} + {complement} != {target}', (i, num),
+                        textcoords="offset points", xytext=(0, 10), ha='center', color='red')
+
+    ax.axhline(y=target, color='gray', linestyle='--', label='Target')
+    ax.set_xlabel('Index')
+    ax.set_ylabel('Value')
+    ax.legend()
+    plt.show()
+
+
+# Пример использования:
+nums = [2, 7, 11, 15]
+target = 9
+plot_steps(nums, target)
